@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+message: "Cite the specific record, Commentary packet, and original source. Citation grants no license or reuse permission."
+title: "Formal Record"
+type: software
+authors:
+  - name: "HautevilleHouse"
+repository-code: "https://github.com/HautevilleHouse/formal-record"
+url: "https://github.com/HautevilleHouse/formal-record"
+license: "LicenseRef-All-Rights-Reserved"

@@ -1,0 +1,47 @@
+name: Verify
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -e .
+      - run: python -m unittest discover -s tests -v
+      - run: formal-record validate
+      - run: formal-record stats
+
+  catalog-drift:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: records
+      - uses: actions/checkout@v4
+        with:
+          repository: HautevilleHouse/commentary
+          path: commentary
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - working-directory: records
+        run: python -m pip install -e .
+      - id: commentary
+        working-directory: commentary
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+      - working-directory: records
+        run: formal-record build-commentary --commentary-root ../commentary --source-revision "${{ steps.commentary.outputs.sha }}" --output .tmp/current
+      - working-directory: records
+        run: diff -u registry/catalog.json .tmp/current/catalog.json
+      - working-directory: records
+        run: diff -u registry/records.jsonl .tmp/current/records.jsonl

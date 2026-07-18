@@ -1,0 +1,4 @@
+{
+  "command": "python3 checkers/replay.py",
+  "result": "passed"
+}

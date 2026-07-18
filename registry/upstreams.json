@@ -1,0 +1,32 @@
+{
+  "observed_utc": "2026-07-18T20:41:00Z",
+  "schema_version": "1.0",
+  "sources": [
+    {
+      "body_policy": "metadata_only",
+      "license_route": "https://huggingface.co/datasets/davisrbr/openconjecture",
+      "name": "OpenConjecture",
+      "revision": "fa03d85db95e6edad4ff751b490704fa8a0d9358",
+      "steward": "davisrbr",
+      "url": "https://huggingface.co/datasets/davisrbr/openconjecture"
+    },
+    {
+      "body_policy": "tree_metadata_only",
+      "lean_file_count": 999,
+      "license": "Apache-2.0",
+      "license_route": "https://github.com/google-deepmind/formal-conjectures/blob/main/LICENSE",
+      "name": "Formal Conjectures",
+      "revision": "c252a41054125b5fd9c8356e2137cd9b55337657",
+      "steward": "Google DeepMind",
+      "url": "https://github.com/google-deepmind/formal-conjectures"
+    },
+    {
+      "body_policy": "public_packet_metadata",
+      "license_route": "https://github.com/HautevilleHouse/commentary#citation-and-rights",
+      "name": "Commentary",
+      "revision": "9ae11ab91b4b9ff369d1f54600e7d5b3ca414247",
+      "steward": "HautevilleHouse",
+      "url": "https://github.com/HautevilleHouse/commentary"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "arxiv_id": "2601.12345v1",
+  "authors": ["Example Author"],
+  "openconjecture_id": 7,
+  "source_claim_body_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "source_lines": "main.tex:10-12",
+  "source_object": "Conjecture 1",
+  "title": "Fixture conjecture"
+}

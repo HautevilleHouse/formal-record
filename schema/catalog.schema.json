@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/HautevilleHouse/formal-record/blob/main/schema/catalog.schema.json",
+  "title": "Records catalog",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "source_revision", "record_count", "records_sha256", "status_counts", "result_type_counts"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "source_revision": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "record_count": {"type": "integer", "minimum": 0},
+    "records_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "status_counts": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+    "result_type_counts": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}}
+  }
+}

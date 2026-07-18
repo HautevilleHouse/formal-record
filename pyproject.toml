@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "formal-record"
+version = "0.1.0"
+description = "Source-bound records for mathematical conjectures and checked outcomes"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { file = "LICENSE" }
+authors = [{ name = "HautevilleHouse" }]
+dependencies = []
+
+[project.scripts]
+formal-record = "conjecture_records.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
