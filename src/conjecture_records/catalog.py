@@ -137,10 +137,16 @@ _STATEMENT_HASH_PRIORITY: tuple[tuple[str, ...], ...] = (
 
 
 def _collect_sha256_entries(identity: dict[str, Any], prefix: str = "") -> list[tuple[str, str]]:
+    """Collect sha256 fields; reject fat-finger / truncated digests instead of skipping them."""
     entries: list[tuple[str, str]] = []
     for key, value in identity.items():
         path = f"{prefix}.{key}" if prefix else key
-        if isinstance(value, str) and "sha256" in key.lower() and _SHA256_RE.fullmatch(value):
+        if isinstance(value, str) and "sha256" in key.lower():
+            if not _SHA256_RE.fullmatch(value):
+                raise ValueError(
+                    f"{path}: expected lowercase hex SHA-256 of exactly 64 characters, "
+                    f"got length {len(value)}"
+                )
             entries.append((path, value))
         elif isinstance(value, dict):
             entries.extend(_collect_sha256_entries(value, path))

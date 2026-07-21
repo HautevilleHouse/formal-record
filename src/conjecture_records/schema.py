@@ -104,6 +104,18 @@ def validate_record(record: Mapping[str, Any]) -> list[str]:
         ):
             errors.append("record.crosswalk.formal_conjectures_paths: unsafe relative path")
 
+    statement = record["statement"]
+    if not isinstance(statement, Mapping):
+        errors.append("record.statement: expected object")
+    else:
+        digest = statement.get("content_sha256")
+        if digest is not None and (
+            not isinstance(digest, str) or not SHA256_RE.fullmatch(digest)
+        ):
+            errors.append(
+                "record.statement.content_sha256: expected lowercase hex SHA-256 of exactly 64 characters"
+            )
+
     settlement = record["settlement"]
     if not isinstance(settlement, Mapping):
         errors.append("record.settlement: expected object")
@@ -165,6 +177,9 @@ def validate_catalog(catalog: Mapping[str, Any], records: list[Mapping[str, Any]
         errors.append("catalog.schema_version: unsupported")
     if catalog["record_count"] != len(records):
         errors.append("catalog.record_count: mismatch")
+    records_digest = catalog.get("records_sha256")
+    if not isinstance(records_digest, str) or not SHA256_RE.fullmatch(records_digest):
+        errors.append("catalog.records_sha256: expected lowercase hex SHA-256 of exactly 64 characters")
     ids = [record.get("record_id") for record in records]
     if len(ids) != len(set(ids)):
         errors.append("records: duplicate record_id")

@@ -83,6 +83,14 @@ class CatalogTests(unittest.TestCase):
         packet_only = extract_statement({"target": "slice", "packet_sha256": "f" * 64}, "role")
         self.assertEqual(packet_only["content_sha256"], "f" * 64)
 
+    def test_extract_statement_rejects_malformed_sha256_length(self) -> None:
+        # Classic fat-finger: correct 64-char digest with one extra trailing hex digit.
+        bad = "7d23d1f8792b3d6bb968703a5a553fc7f1f7e8d870f16fdd4aee1274621041bd7"
+        with self.assertRaisesRegex(ValueError, r"exactly 64 characters"):
+            extract_statement({"target": "q=7 slice", "source_statement_sha256": bad}, "role")
+        with self.assertRaisesRegex(ValueError, r"exactly 64 characters"):
+            extract_statement({"target": "q=7 slice", "source_statement_sha256": "abc"}, "role")
+
     def test_python_and_nested_lean_routes_are_both_recorded(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             packet = Path(directory)
