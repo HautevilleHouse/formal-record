@@ -24,8 +24,9 @@ def sha256_bytes(payload: bytes) -> str:
     return hashlib.sha256(payload).hexdigest()
 
 
-def stable_record_id(source_identifier: str, packet_slug: str) -> str:
-    key = f"arxiv\0{source_identifier}\0{packet_slug}".encode()
+def stable_record_id(source_identifier: str, packet_slug: str, *, kind: str = "arxiv") -> str:
+    # Keep the historical "arxiv\0..." key for arXiv records so existing IDs stay stable.
+    key = f"{kind}\0{source_identifier}\0{packet_slug}".encode()
     return "cr_" + hashlib.sha256(key).hexdigest()[:24]
 
 
@@ -71,6 +72,35 @@ def extract_arxiv_id(identity: dict[str, Any]) -> str:
         if isinstance(value, str) and (match := ARXIV_RE.search(value)):
             return match.group(1)
     raise ValueError("source_identity.json has no versioned arXiv identifier")
+
+
+def extract_versioned_source(identity: dict[str, Any]) -> tuple[str, str, str]:
+    """Return (kind, identifier, url) for catalog indexing.
+
+    Prefer a versioned arXiv id when present. Otherwise accept an explicit
+    ``versioned_source`` object for non-arXiv public packets (Graffiti, WoW,
+    GitHub-pinned statements).
+    """
+    try:
+        arxiv_id = extract_arxiv_id(identity)
+        return ("arxiv", arxiv_id, f"https://arxiv.org/abs/{arxiv_id}")
+    except ValueError:
+        pass
+    versioned = identity.get("versioned_source")
+    if isinstance(versioned, dict):
+        kind = versioned.get("kind")
+        identifier = versioned.get("identifier")
+        url = versioned.get("url")
+        if (
+            isinstance(kind, str)
+            and kind.strip()
+            and isinstance(identifier, str)
+            and identifier.strip()
+            and isinstance(url, str)
+            and url.startswith("https://")
+        ):
+            return (kind.strip(), identifier.strip(), url)
+    raise ValueError("source_identity.json has no versioned source identifier")
 
 
 def extract_title(identity: dict[str, Any], fallback: str) -> str:
@@ -294,22 +324,21 @@ def build_commentary_records(commentary_root: Path, source_revision: str) -> lis
                 "role": str(identity.get("scope", identity.get("target", "bounded packet"))),
             }
         try:
-            arxiv_id = extract_arxiv_id(identity)
+            source_kind, source_identifier, source_url = extract_versioned_source(identity)
         except ValueError:
-            # Formal-Conjectures-only packets may have no arXiv identifier;
-            # retain them in Commentary but leave them outside this arXiv-keyed
-            # catalog until a versioned source identifier is recorded.
+            # Packets without a versioned arXiv id or explicit versioned_source
+            # stay in Commentary but outside this catalog until a source pin is
+            # recorded.
             continue
-        source_url = f"https://arxiv.org/abs/{arxiv_id}"
         status, result_type = classify_settlement(slug, row["role"])
         record = {
             "schema_version": SCHEMA_VERSION,
-            "record_id": stable_record_id(arxiv_id, slug),
+            "record_id": stable_record_id(source_identifier, slug, kind=source_kind),
             "title": extract_title(identity, row["title"]),
             "authors": extract_authors(identity),
             "source": {
-                "kind": "arxiv",
-                "identifier": arxiv_id,
+                "kind": source_kind,
+                "identifier": source_identifier,
                 "url": source_url,
             },
             "crosswalk": {

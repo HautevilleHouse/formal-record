@@ -24,9 +24,10 @@
       "body_policy": "public_packet_metadata",
       "license_route": "https://github.com/HautevilleHouse/commentary#citation-and-rights",
       "name": "Commentary",
-      "revision": "9ae11ab91b4b9ff369d1f54600e7d5b3ca414247",
+      "revision": "c693cb05864f069e0b2da96a029fd814c3c586c0",
       "steward": "HautevilleHouse",
-      "url": "https://github.com/HautevilleHouse/commentary"
+      "url": "https://github.com/HautevilleHouse/commentary",
+      "observed_utc": "2026-07-23T23:09:57Z"
     }
   ]
 }
