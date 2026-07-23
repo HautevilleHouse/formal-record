@@ -6,7 +6,7 @@ The repository gives each result a stable identifier, source version, crosswalk,
 
 ## Current Catalog
 
-- 36 source-bound result packets
+- 39 source-bound result packets
 - versioned arXiv identifiers for every record
 - OpenConjecture identifiers when the source packet supplies one
 - packet replay routes and source-identity hashes
