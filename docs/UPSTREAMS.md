@@ -30,4 +30,8 @@ Records uses upstream projects as attributed source routes.
 - Repository: https://github.com/HautevilleHouse/commentary
 - Records policy: generated record metadata links to the complete public packet and binds the public identity file by SHA-256
 
+## Commentary history note
+
+The public [`commentary`](https://github.com/HautevilleHouse/commentary) shelf was republished as a single-commit public history. Catalog `source_revision` values pin the live public tip. Older multi-commit history is retained off the public surface and is not part of this catalog's provenance pins.
+
 Attribution and metadata links do not imply endorsement by any upstream steward.
